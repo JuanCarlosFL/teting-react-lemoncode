@@ -30,7 +30,7 @@ describe('mappers specs', ()=> {
 
   });
 
-  it('Should return array one mapped item with empty employees array when it feeds undefined employess', ()=>{
+  it('Should return one mapped item with empty employees array when it feeds undefined employess', ()=>{
     // Arrange
     const employees: apiModel.Project = {
       id: "AO27",
@@ -55,13 +55,38 @@ describe('mappers specs', ()=> {
 
   });
 
-  it('Should return array one mapped item with empty employees array when it feeds undefined employess', ()=>{
+  it('Should return one mapped item with empty employees array when it feeds null employess', ()=>{
     // Arrange
     const employees: apiModel.Project = {
       id: "AO27",
       name: "Name Test",
       isActive: false,
       employees: null
+    };
+
+    const expectedResult: viewModel.Project =
+    {
+      id: "AO27",
+      name: "Name Test",
+      isActive: false,
+      employees: []
+    };
+
+    // Act
+    const result: viewModel.Project = mapProjectFromApiToVm(employees)
+
+    // Assert
+    expect(result).toEqual(expectedResult);
+
+  });
+
+  it('Should return one mapped item with empty employees array when it feeds empty array of employess', ()=>{
+    // Arrange
+    const employees: apiModel.Project = {
+      id: "AO27",
+      name: "Name Test",
+      isActive: false,
+      employees: []
     };
 
     const expectedResult: viewModel.Project =

@@ -1,50 +1,62 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ConfirmationDialogComponent } from "./confirmation-dialog.component";
 import userEvent from '@testing-library/user-event';
 
 describe('ConfirmationDialogComponent specs', () => {
 
-  const props = {
-    isOpen: true,
-    onAccept: jest.fn(),
-    onClose: jest.fn(),
-    title: 'Title Test',
-    labels: {closeButton: "close", acceptButton: "accept" }
-  }
-
-  it('Should do something', () => {
+  it('Should render modal window when isOpen is true', () => {
     // Arrange
+    const props = {
+      isOpen: true,
+      onAccept: jest.fn(),
+      onClose: jest.fn(),
+      title: 'Title Test',
+      labels: {closeButton: "close", acceptButton: "accept" }
+    }
 
     // Act
     render(<ConfirmationDialogComponent {...props} />)
+    const elementDialog = screen.getByRole('dialog');
 
     // Assert
-    const element = screen.getByText('Title Test');
-    // expect(element).toBeTruthy();
-    // expect(element).not.toBeNull();
-    expect(element.tagName).toEqual('H2');
+    expect(elementDialog).toBeInTheDocument();
 
   });
 
-  it('Should display the title using snapshot testing', () => {
+  it('Should not render modal window when isOpen is false', () => {
     // Arrange
+    const props = {
+      isOpen: false,
+      onAccept: jest.fn(),
+      onClose: jest.fn(),
+      title: 'Title Test',
+      labels: {closeButton: "close", acceptButton: "accept" }
+    }
 
     // Act
-    const { asFragment } = render(<ConfirmationDialogComponent {...props} />)
+    render(<ConfirmationDialogComponent {...props} />)
+    const elementDialog = screen.queryByRole('dialog');
 
     // Assert
-    expect(asFragment()).toMatchSnapshot();
+    expect(elementDialog).not.toBeInTheDocument();
 
   });
 
-  it('Should display the title like Title Test', () => {
+  it('Should display the title when isOpen is true', () => {
     // Arrange
+    const props = {
+      isOpen: true,
+      onAccept: jest.fn(),
+      onClose: jest.fn(),
+      title: 'Title Test',
+      labels: {closeButton: "close", acceptButton: "accept" }
+    }
 
     // Act
     render(<ConfirmationDialogComponent {...props} />)
     const element = screen.getByRole('heading', {
-      level: 2
+      level: 2,
     });
 
     // Assert
@@ -52,80 +64,68 @@ describe('ConfirmationDialogComponent specs', () => {
 
   });
 
-  it('Should display the close button', () => {
+  it('Should display the buttons in enabled state', () => {
     // Arrange
-
-    // Act
-    render(<ConfirmationDialogComponent {...props} />)
-    const element = screen.getByRole('button', {
-      name: 'close'
-    });
-
-    // Assert
-    expect(element).toBeInTheDocument();
-
-  });
-
-  it('Should display the accept button in enabled state', () => {
-    // Arrange
-
-
-    // Act
-    render(<ConfirmationDialogComponent {...props} />)
-    const element = screen.getByRole('button', {
-      name: 'accept'
-    });
-
-    // Assert
-    expect(element).toBeEnabled();
-
-  });
-
-  it('Should display all the buttons', () => {
-    // Arrange
+    const props = {
+      isOpen: true,
+      onAccept: jest.fn(),
+      onClose: jest.fn(),
+      title: 'Title Test',
+      labels: {closeButton: "close", acceptButton: "accept" }
+    }
 
     // Act
     render(<ConfirmationDialogComponent {...props} />)
     const element = screen.getAllByRole('button');
 
     // Assert
+    expect(element[0]).toBeEnabled();
+    expect(element[1]).toBeEnabled();
     expect(element).toHaveLength(2);
 
   });
 
-
-  it('Should not display the component with isOpen false', () => {
+  it('Should close button called when user click on close button', () => {
     // Arrange
-    // const newProps = { ...props, isOpen: false}
-
+    const props = {
+      isOpen: true,
+      onAccept: jest.fn(),
+      onClose: jest.fn(),
+      title: 'Title Test',
+      labels: {closeButton: "close", acceptButton: "accept" }
+    }
     // Act
-    render(<ConfirmationDialogComponent {...props} isOpen={true} />)
-    const element = screen.queryByDisplayValue('Title Test')
+    render(<ConfirmationDialogComponent {...props} />)
+    const button =  screen.getAllByRole('button');
+
+    userEvent.click(button[0])
 
     // Assert
-    expect(element).not.toBeInTheDocument();
+    expect(props.onClose).toHaveBeenCalled();
 
   });
 
-  it('Should display title and when press cancel button should not display title', () => {
+  it('Should accept button called when user click on accept button', () => {
     // Arrange
-
+    const props = {
+      isOpen: true,
+      onAccept: jest.fn(),
+      onClose: jest.fn(),
+      title: 'Title Test',
+      labels: {closeButton: "close", acceptButton: "accept" }
+    }
 
 
     // Act
     render(<ConfirmationDialogComponent {...props} />)
-    let element = screen.queryByDisplayValue('Title Test');
-    expect(element).not.toBeInTheDocument();
+    const button =  screen.getAllByRole('button');
 
-    const button =  screen.getByRole('button', {
-      name: 'accept'
-    });
-
-    userEvent.click(button)
-    element = screen.queryByDisplayValue('Title Test')
+    userEvent.click(button[1])
 
     // Assert
-    expect(element).not.toBeInTheDocument();
+    expect(props.onAccept).toHaveBeenCalled();
 
   });
+
+
 });
