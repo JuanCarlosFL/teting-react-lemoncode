@@ -8,9 +8,9 @@ describe('spinner.component spec',   () => {
   it('', async ()=> {
     //Arrange
     const stub = jest.spyOn(promiseTraker, 'usePromiseTracker')
-      
+
     //Act
-    render(<SpinnerComponent);
+    render(<SpinnerComponent/>);
     const element = screen.queryByRole('presentation');
     //Assert
     expect(element).not.toBeInTheDocument();
