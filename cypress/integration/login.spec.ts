@@ -9,14 +9,13 @@ describe('Login specs', () => {
     const password = '1234';
     // Act
     cy.visit('/');
-    const userInput = cy.get('input[name="user"]');
-    const passwordInput = cy.get('input[name="password"]');
+    cy.findAllByRole('input').as('input');
 
-    userInput.type(user);
-    passwordInput.type(password);
+    cy.get('@input[0]').type(user);
+    cy.get('@input[1]').type('password');
     // Assert
-    userInput.should('have.value', user);
-    passwordInput.should('have.value', password);
+    cy.get('@input').should('have.value', user);
+    cy.get('@input').should('have.value', password);
   });
 
 });
